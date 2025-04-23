@@ -140,7 +140,8 @@ export async function PUT(request: Request) {
 export async function GET() {
   try {
     return NextResponse.json({ message: 'Use PUT …' });
-  } catch (_err) {
+  } catch (err) {
+    console.error('GET /api/team failed:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

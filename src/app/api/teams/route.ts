@@ -26,15 +26,16 @@ const initTeamDataFile = () => {
     // Try to read from local data, or create default if not available
     try {
       initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
-    } catch (error) {
-      // Default data if local file isn't available
+    } catch (err) {
+      console.warn('teamData.json not found or unreadable – using defaults:', err);
       initialData = {
         teams: nhlPlayoffTeamsBase.map(team => ({
           id: team.id,
-          wins: team.wins
-        }))
+          wins: team.wins,
+        })),
       };
     }
+    
     
     // Write the initial data to the Vercel-compatible location
     fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
