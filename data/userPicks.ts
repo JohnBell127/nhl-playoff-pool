@@ -68,85 +68,382 @@ export const userPicksData: UserPicksData[] = [
   },
   {
     id: 3,
-    name: '',
+    name: 'Mary Ann',
     email: 'mike.smith@example.com',
     picks: {
       eastern: {
-        1: 2, // Toronto
-        2: 4, // Carolina
-        3: 6, // New Jersey
-        4: 8, // Montreal
-        5: 1, // Capitals
+        4: 2, // Toronto
+        1: 4, // Carolina
+        2: 6, // New Jersey
+        5: 8, // Montreal
+        3: 1, // Capitals
         6: 3, // Tampa Bay
         7: 5, // Florida
         8: 7, // Ottawa
       },
       western: {
-        1: 10, // Vegas
-        2: 12, // LA
-        3: 14, // Edmonton
-        4: 16, // St Louis
-        5: 9,  // Winnipeg
-        6: 11, // Dallas
-        7: 13, // Colorado
-        8: 15, // Minnesota
+        4: 10, // Vegas
+        1: 12, // LA
+        5: 14, // Edmonton
+        2: 16, // St Louis
+        6: 9,  // Winnipeg
+        7: 11, // Dallas
+        8: 13, // Colorado
+        3: 15, // Minnesota
       }
     }
   },
   {
     id: 4,
-    name: '',
+    name: 'Barry',
     email: 'emily.rodriguez@example.com',
     picks: {
       eastern: {
-        1: 3, // Tampa Bay
-        2: 5, // Florida
-        3: 7, // Ottawa
-        4: 1, // Capitals
-        5: 2, // Toronto
-        6: 4, // Carolina
-        7: 6, // New Jersey
-        8: 8, // Montreal
+        7: 3, // Tampa Bay
+        8: 5, // Florida
+        5: 7, // Ottawa
+        1: 1, // Capitals
+        6: 2, // Toronto
+        2: 4, // Carolina
+        3: 6, // New Jersey
+        4: 8, // Montreal
       },
       western: {
-        1: 11, // Dallas
-        2: 13, // Colorado
-        3: 15, // Minnesota
-        4: 9,  // Winnipeg
-        5: 10, // Vegas
-        6: 12, // LA
-        7: 14, // Edmonton
-        8: 16, // St Louis
+        5: 11, // Dallas
+        6: 13, // Colorado
+        2: 15, // Minnesota
+        8: 9,  // Winnipeg
+        7: 10, // Vegas
+        1: 12, // LA
+        4: 14, // Edmonton
+        3: 16, // St Louis
       }
     }
   },
   {
     id: 5,
-    name: '',
+    name: 'Pamela',
     email: 'david.wilson@example.com',
     picks: {
       eastern: {
-        1: 4, // Carolina
-        2: 3, // Tampa Bay
-        3: 2, // Toronto
-        4: 1, // Capitals
-        5: 8, // Montreal
-        6: 7, // Ottawa
-        7: 6, // New Jersey
-        8: 5, // Florida
+        8: 2, // Toronto
+        5: 7, // Ottawa
+        1: 3, // Tampa Bay
+        6: 5, // Florida
+        2: 1, // Washington
+        4: 8, // Montreal
+        7: 4, // Carolina
+        3: 6, // New Jersey
       },
       western: {
-        1: 14, // Edmonton
-        2: 13, // Colorado
-        3: 12, // LA
-        4: 11, // Dallas
+        1: 9,  // Winnepeg
+        2: 16, // St Louis
+        3: 11, // Dallas
+        4: 13, // Colarado
         5: 10, // Vegas
-        6: 9,  // Winnipeg
-        7: 16, // St Louis
-        8: 15, // Minnesota
+        6: 15, // Minnesota
+        7: 12, // LA
+        8: 14, // Edmonton
       }
     }
-  }
+  },
+  {
+    id: 6,
+    name: 'Sofia',
+    email: '',
+    picks: {
+        eastern: {
+            2: 2, // Toronto
+            1: 7, // Ottawa
+            6: 3, // Tampa Bay
+            8: 5, // Florida
+            4: 1, // Washington
+            5: 8, // Montreal
+            7: 4, // Carolina
+            3: 6, // New Jersey
+          },
+          western: {
+            8: 9,  // Winnepeg
+            4: 16, // St Louis
+            3: 11, // Dallas
+            5: 13, // Colarado
+            6: 10, // Vegas
+            1: 15, // Minnesota
+            2: 12, // LA
+            7: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 7,
+    name: 'James',
+    email: '',
+    picks: {
+        eastern: {
+            8: 2, // Toronto
+            1: 7, // Ottawa
+            6: 3, // Tampa Bay
+            7: 5, // Florida
+            3: 1, // Washington
+            4: 8, // Montreal
+            5: 4, // Carolina
+            2: 6, // New Jersey
+          },
+          western: {
+            6: 9,  // Winnepeg
+            3: 16, // St Louis
+            2: 11, // Dallas
+            8: 13, // Colarado
+            5: 10, // Vegas
+            1: 15, // Minnesota
+            7: 12, // LA
+            4: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 8,
+    name: 'Noe',
+    email: '',
+    picks: {
+        eastern: {
+            2: 2, // Toronto
+            7: 7, // Ottawa
+            6: 3, // Tampa Bay
+            3: 5, // Florida
+            8: 1, // Washington
+            4: 8, // Montreal
+            5: 4, // Carolina
+            1: 6, // New Jersey
+          },
+          western: {
+            3: 9,  // Winnepeg
+            6: 16, // St Louis
+            2: 11, // Dallas
+            8: 13, // Colarado
+            5: 10, // Vegas
+            1: 15, // Minnesota
+            7: 12, // LA
+            4: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 9,
+    name: 'Ashley',
+    email: '',
+    picks: {
+        eastern: {
+            1: 2, // Toronto
+            5: 7, // Ottawa
+            3: 3, // Tampa Bay
+            7: 5, // Florida
+            4: 1, // Washington
+            6: 8, // Montreal
+            8: 4, // Carolina
+            2: 6, // New Jersey
+          },
+          western: {
+            5: 9,  // Winnepeg
+            1: 16, // St Louis
+            7: 11, // Dallas
+            8: 13, // Colarado
+            4: 10, // Vegas
+            2: 15, // Minnesota
+            6: 12, // LA
+            3: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 10,
+    name: 'Donna',
+    email: '',
+    picks: {
+        eastern: {
+            2: 2, // Toronto
+            3: 7, // Ottawa
+            7: 3, // Tampa Bay
+            8: 5, // Florida
+            6: 1, // Washington
+            1: 8, // Montreal
+            5: 4, // Carolina
+            4: 6, // New Jersey
+          },
+          western: {
+            7: 9,  // Winnepeg
+            4: 16, // St Louis
+            1: 11, // Dallas
+            8: 13, // Colarado
+            5: 10, // Vegas
+            3: 15, // Minnesota
+            6: 12, // LA
+            2: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 11,
+    name: 'Mike',
+    email: '',
+    picks: {
+        eastern: {
+            6: 2, // Toronto
+            3: 7, // Ottawa
+            5: 3, // Tampa Bay
+            2: 5, // Florida
+            8: 1, // Washington
+            1: 8, // Montreal
+            4: 4, // Carolina
+            7: 6, // New Jersey
+          },
+          western: {
+            6: 9,  // Winnepeg
+            3: 16, // St Louis
+            5: 11, // Dallas
+            2: 13, // Colarado
+            8: 10, // Vegas
+            1: 15, // Minnesota
+            4: 12, // LA
+            7: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 12,
+    name: 'Margie',
+    email: '',
+    picks: {
+        eastern: {
+            3: 2, // Toronto
+            1: 7, // Ottawa
+            4: 3, // Tampa Bay
+            7: 5, // Florida
+            2: 1, // Washington
+            6: 8, // Montreal
+            8: 4, // Carolina
+            5: 6, // New Jersey
+          },
+          western: {
+            5: 9,  // Winnepeg
+            2: 16, // St Louis
+            7: 11, // Dallas
+            8: 13, // Colarado
+            6: 10, // Vegas
+            1: 15, // Minnesota
+            3: 12, // LA
+            4: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 13,
+    name: 'Donald',
+    email: '',
+    picks: {
+        eastern: {
+            8: 2, // Toronto
+            2: 7, // Ottawa
+            7: 3, // Tampa Bay
+            5: 5, // Florida
+            6: 1, // Washington
+            3: 8, // Montreal
+            4: 4, // Carolina
+            1: 6, // New Jersey
+          },
+          western: {
+            5: 9,  // Winnepeg
+            3: 16, // St Louis
+            7: 11, // Dallas
+            8: 13, // Colarado
+            4: 10, // Vegas
+            2: 15, // Minnesota
+            1: 12, // LA
+            6: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 14,
+    name: 'Kenny',
+    email: '',
+    picks: {
+        eastern: {
+            3: 2, // Toronto
+            6: 7, // Ottawa
+            1: 3, // Tampa Bay
+            8: 5, // Florida
+            2: 1, // Washington
+            4: 8, // Montreal
+            7: 4, // Carolina
+            5: 6, // New Jersey
+          },
+          western: {
+            6: 9,  // Winnepeg
+            1: 16, // St Louis
+            4: 11, // Dallas
+            7: 13, // Colarado
+            8: 10, // Vegas
+            3: 15, // Minnesota
+            2: 12, // LA
+            5: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 15,
+    name: 'David',
+    email: '',
+    picks: {
+        eastern: {
+            6: 2, // Toronto
+            2: 7, // Ottawa
+            8: 3, // Tampa Bay
+            5: 5, // Florida
+            3: 1, // Washington
+            4: 8, // Montreal
+            7: 4, // Carolina
+            1: 6, // New Jersey
+          },
+          western: {
+            7: 9,  // Winnepeg
+            3: 16, // St Louis
+            4: 11, // Dallas
+            6: 13, // Colarado
+            5: 10, // Vegas
+            2: 15, // Minnesota
+            1: 12, // LA
+            8: 14, // Edmonton
+        }
+    }
+  },
+  {
+    id: 16,
+    name: 'Sabrina',
+    email: '',
+    picks: {
+        eastern: {
+            6: 2, // Toronto
+            1: 7, // Ottawa
+            3: 3, // Tampa Bay
+            8: 5, // Florida
+            5: 1, // Washington
+            4: 8, // Montreal
+            7: 4, // Carolina
+            2: 6, // New Jersey
+          },
+          western: {
+            8: 9,  // Winnepeg
+            4: 16, // St Louis
+            3: 11, // Dallas
+            5: 13, // Colarado
+            6: 10, // Vegas
+            1: 15, // Minnesota
+            2: 12, // LA
+            7: 14, // Edmonton
+        }
+    }
+  },
 ];
 
 // Calculate score for a single user based on current team wins
