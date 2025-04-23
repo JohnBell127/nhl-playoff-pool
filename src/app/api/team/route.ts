@@ -5,9 +5,11 @@ import { nhlPlayoffTeamsBase } from '../../../../data/nhlTeamsData';
 import { revalidatePath } from 'next/cache';
 
 // Helper function to get team by ID
-const getTeamById = (teams: any[], id: number) => {
-  return teams.find(team => team.id === id);
-};
+const getTeamById = <T extends { id: number }>(
+  teams: T[],
+  id: number,
+): T | undefined => teams.find(team => team.id === id);
+
 
 // Get file path for team data, ensuring it works in Vercel environment
 const getTeamDataFilePath = () => {
@@ -33,6 +35,7 @@ const initTeamDataFile = () => {
     try {
       initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
     } catch (error) {
+      console.error('Failed to initialise team data:', error);
       // Default data if local file isn't available
       initialData = {
         teams: nhlPlayoffTeamsBase.map(team => ({
@@ -136,13 +139,8 @@ export async function PUT(request: Request) {
 
 export async function GET() {
   try {
-    return NextResponse.json({ 
-      message: 'Use PUT method to update team wins' 
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Use PUT …' });
+  } catch (_err) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
-} 
+}

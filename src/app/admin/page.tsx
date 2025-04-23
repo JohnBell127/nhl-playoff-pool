@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from "../../../components/Layout";
-import { nhlPlayoffTeams, getEasternTeams, getWesternTeams, NHLTeam } from "../../../data/nhlTeams";
+import { getEasternTeams, getWesternTeams, NHLTeam } from "../../../data/nhlTeams";
 import Link from 'next/link';
 
 const AdminPage = () => {

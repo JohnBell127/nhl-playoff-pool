@@ -59,7 +59,7 @@ const UserPicksModal: React.FC<UserPicksModalProps> = ({
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-t-lg">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-bold">{userName}'s Playoff Picks</h2>
+              <h2 className="text-2xl font-bold">{userName}&apos;s Playoff Picks</h2>
               <p className="text-white font-medium mt-1">Total Points: {totalPoints}</p>
             </div>
             <button 

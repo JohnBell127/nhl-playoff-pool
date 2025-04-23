@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import UserPicksModal from './UserPicksModal';
-import { nhlPlayoffTeams, getTeamById } from '../data/nhlTeams';
-import { userPicksData, getAllUsersWithScores } from '../data/userPicks';
+import { userPicksData } from '../data/userPicks';
 import { NHLTeam } from '../data/nhlTeamsData';
 
 interface UserWithScore {
