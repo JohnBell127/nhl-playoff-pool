@@ -21,22 +21,29 @@ const getTeamDataFilePath = () => {
   return path.join(process.cwd(), 'data', 'teamData.json');
 };
 
-// Initialize team data file in Vercel environment if it doesn't exist
+// Initialize team data file in Vercel /tmp if it doesn't exist
 const initTeamDataFile = () => {
   const filePath = getTeamDataFilePath();
   
-  // Check if file doesn't exist in Vercel environment
-  if (process.env.VERCEL && !fs.existsSync(filePath)) {
-    // Create initial data from local version
-    const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    console.log(`Data file not found at ${filePath}. Initializing...`);
     let initialData;
+    const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
+
+    // Try to read from local data file if it exists (mainly for dev)
+    if (!process.env.VERCEL && fs.existsSync(localFilePath)) {
+        try {
+            console.log(`Attempting to initialize from local file: ${localFilePath}`);
+            initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
+        } catch (err) {
+            console.warn(`Local teamData.json found but unreadable (${localFilePath}). Using defaults.`, err);
+        }
+    }
     
-    // Try to read from local data, or create default if not available
-    try {
-      initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
-    } catch (error) {
-      console.error('Failed to initialise team data:', error);
-      // Default data if local file isn't available
+    // If initialData is still undefined (Vercel env or local file issue), use defaults
+    if (!initialData) {
+      console.log(`Initializing data using nhlPlayoffTeamsBase defaults.`);
       initialData = {
         teams: nhlPlayoffTeamsBase.map(team => ({
           id: team.id,
@@ -45,16 +52,23 @@ const initTeamDataFile = () => {
       };
     }
     
-    // Write the initial data to the Vercel-compatible location
-    fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
+    try {
+      // Write the initial data to the target location (/tmp on Vercel, data/ locally)
+      console.log(`Writing initial data to: ${filePath}`);
+      fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
+      console.log(`Successfully initialized data file at: ${filePath}`);
+    } catch (writeErr) {
+      console.error(`Failed to write initial data file to ${filePath}:`, writeErr);
+    }
   }
 };
 
 // Helper function to update team wins in JSON file
 const updateTeamWinsInFile = (id: number, wins: number) => {
   try {
-    initTeamDataFile();
+    initTeamDataFile(); // Ensure file exists before trying to update
     const filePath = getTeamDataFilePath();
+    console.log(`PUT /api/team - Updating team ${id} with ${wins} wins in file: ${filePath}`);
     
     // Read current data
     const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -65,18 +79,20 @@ const updateTeamWinsInFile = (id: number, wins: number) => {
     if (teamIndex >= 0) {
       data.teams[teamIndex].wins = wins;
     } else {
-      // Add new team if not found
-      data.teams.push({ id, wins });
+      // Optionally add team if not found - depends on desired behavior
+      console.warn(`Team ID ${id} not found in data file. Not adding.`);
+      // data.teams.push({ id, wins }); // Uncomment to add if needed
     }
     
     // Write back to file
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`Successfully updated team ${id} in ${filePath}`);
     
-    // Get the full team details
-    const team = getTeamById(nhlPlayoffTeamsBase, id);
-    return { ...team, wins };
+    // Get the full team details to return
+    const baseTeam = getTeamById(nhlPlayoffTeamsBase, id);
+    return { ...baseTeam, wins }; // Return combined data
   } catch (error) {
-    console.error('Failed to update team data:', error);
+    console.error(`Failed to update team data for team ID ${id}:`, error);
     return null;
   }
 };
@@ -92,44 +108,26 @@ export async function PUT(request: Request) {
       );
     }
     
-    // Initialize team data file
-    initTeamDataFile();
-    const filePath = getTeamDataFilePath();
-    
-    // Load team data from file
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const data = JSON.parse(fileContent);
-    const teamWinsData = data.teams;
-    
-    // Merge base team data with wins from JSON file
-    const teams = nhlPlayoffTeamsBase.map(team => {
-      const savedTeamData = teamWinsData.find((t: { id: number }) => t.id === team.id);
-      return {
-        ...team,
-        wins: savedTeamData ? savedTeamData.wins : team.wins
-      };
-    });
-    
-    // Check if team exists
-    const team = getTeamById(teams, teamId);
-    if (!team) {
-      return NextResponse.json(
-        { error: `Team with ID ${teamId} not found` },
-        { status: 404 }
-      );
-    }
-    
     // Update team wins in file
     const updatedTeam = updateTeamWinsInFile(teamId, wins);
+
+    if (!updatedTeam) {
+        return NextResponse.json(
+            { error: 'Failed to update team wins in storage.' },
+            { status: 500 }
+        );
+    }
     
     // Revalidate relevant paths to update data across the site
     revalidatePath('/admin');
     revalidatePath('/admin/standings');
     revalidatePath('/');
+    revalidatePath('/teams'); // Add revalidation for teams page
     
+    console.log(`PUT /api/team - Successfully updated team ${teamId}, revalidating paths.`);
     return NextResponse.json({ success: true, team: updatedTeam });
   } catch (error) {
-    console.error('Error updating team wins:', error);
+    console.error('Error updating team wins (PUT request handler): ', error);
     return NextResponse.json(
       { error: 'Failed to update team wins' },
       { status: 500 }
@@ -138,8 +136,9 @@ export async function PUT(request: Request) {
 }
 
 export async function GET() {
+  // This route doesn't really do anything, mainly here for completeness
   try {
-    return NextResponse.json({ message: 'Use PUT …' });
+    return NextResponse.json({ message: 'Use PUT method to update team wins.' });
   } catch (err) {
     console.error('GET /api/team failed:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
