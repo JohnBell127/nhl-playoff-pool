@@ -153,9 +153,9 @@ const Leaderboard: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-center mb-2 text-blue-900">NHL Playoff Pool</h1>
-      <p className="text-center text-gray-600 mb-6">
+    <div className="w-full max-w-6xl mx-auto mt-4 sm:mt-8 px-3 sm:px-0">
+      <h1 className="text-3xl sm:text-4xl font-bold text-center mb-2 text-blue-900">NHL Playoff Pool</h1>
+      <p className="text-center text-gray-600 mb-4 sm:mb-6">
         Current Standings
         {lastUpdated && (
           <span className="block text-xs text-gray-500 mt-1">
@@ -165,11 +165,11 @@ const Leaderboard: React.FC = () => {
       </p>
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-4 px-6 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Leaderboard</h2>
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 px-4 sm:py-4 sm:px-6 flex justify-between items-center">
+          <h2 className="text-lg sm:text-xl font-bold">Leaderboard</h2>
           <button
             onClick={fetchTeamData}
-            className="bg-white text-blue-800 hover:bg-gray-100 py-1 px-3 rounded text-xs font-medium transition-colors flex items-center"
+            className="bg-white text-blue-800 hover:bg-gray-100 py-1 px-2 sm:px-3 rounded text-xs font-medium transition-colors flex items-center"
           >
             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -182,20 +182,21 @@ const Leaderboard: React.FC = () => {
           <table className="w-full text-sm text-left text-gray-700">
             <thead className="bg-gray-50 text-gray-700 uppercase text-xs font-medium border-b border-gray-200">
               <tr>
-                <th scope="col" className="px-6 py-4 w-16 text-center">
-                  Rank
+                <th scope="col" className="px-2 sm:px-6 py-3 sm:py-4 w-12 sm:w-16 text-center">
+                  #
                 </th>
-                <th scope="col" className="px-6 py-4">
+                <th scope="col" className="px-2 sm:px-6 py-3 sm:py-4">
                   Player
                 </th>
-                <th scope="col" className="px-6 py-4 text-center">
-                  Points
+                <th scope="col" className="px-2 sm:px-6 py-3 sm:py-4 text-center">
+                  Pts
                 </th>
-                <th scope="col" className="px-6 py-4">
+                <th scope="col" className="hidden sm:table-cell px-6 py-4">
                   Best Pick
                 </th>
-                <th scope="col" className="px-6 py-4 text-center">
-                  Details
+                <th scope="col" className="px-2 sm:px-6 py-3 sm:py-4 text-center">
+                  <span className="hidden sm:inline">Details</span>
+                  <span className="sm:hidden">View</span>
                 </th>
               </tr>
             </thead>
@@ -211,16 +212,22 @@ const Leaderboard: React.FC = () => {
                 
                 return (
                   <tr key={user.id} className={rowClass}>
-                    <td className="px-6 py-4 font-bold text-center">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 font-bold text-center">
                       {index + 1}
                     </td>
-                    <td className="px-6 py-4 font-medium">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 font-medium">
                       {user.name}
+                      {/* Mobile-only best pick info */}
+                      {user.bestPick && user.bestPick.points > 0 && (
+                        <span className="block sm:hidden text-xs text-gray-500 mt-1">
+                          Best: {bestTeam?.abbreviation || '??'} ({user.bestPick.points}pts)
+                        </span>
+                      )}
                     </td>
-                    <td className="px-6 py-4 font-bold text-xl text-center text-blue-900">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 font-bold text-lg sm:text-xl text-center text-blue-900">
                       {user.score}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="hidden sm:table-cell px-6 py-4">
                       {user.bestPick && user.bestPick.points > 0 ? (
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center text-xs">
@@ -235,12 +242,13 @@ const Leaderboard: React.FC = () => {
                         <span className="text-gray-500">No points yet</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 text-center">
                       <button 
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs font-medium transition-colors"
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 sm:px-3 rounded text-xs font-medium transition-colors"
                         onClick={() => openUserDetails(user)}
                       >
-                        View Picks
+                        <span className="hidden sm:inline">View Picks</span>
+                        <span className="sm:hidden">Picks</span>
                       </button>
                     </td>
                   </tr>
@@ -251,8 +259,8 @@ const Leaderboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-8 bg-white rounded-lg p-6 shadow-md border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-700 mb-3">How Scoring Works</h3>
+      <div className="mt-6 sm:mt-8 bg-white rounded-lg p-4 sm:p-6 shadow-md border border-gray-100">
+        <h3 className="text-lg font-bold text-gray-700 mb-2 sm:mb-3">How Scoring Works</h3>
         <p className="text-gray-600 text-sm">
           Players rank teams from 1-8 in each conference. When a team wins a game, the player gets points equal to the position value they assigned to that team.
         </p>
