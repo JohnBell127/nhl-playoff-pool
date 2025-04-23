@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from "../../../../components/Layout";
-import { nhlPlayoffTeams, NHLTeam } from "../../../../data/nhlTeams";
+import { nhlPlayoffTeams } from "../../../../data/nhlTeams";
+import { NHLTeam } from "../../../../data/nhlTeamsData";
 import { getAllUsersWithScores } from "../../../../data/userPicks";
 import Link from "next/link";
 

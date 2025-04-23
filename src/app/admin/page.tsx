@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from "../../../components/Layout";
-import { getEasternTeams, getWesternTeams, NHLTeam } from "../../../data/nhlTeams";
+import { getEasternTeams, getWesternTeams} from "../../../data/nhlTeams";
+import { NHLTeam } from '../../../data/nhlTeamsData';
 import Link from 'next/link';
 
 const AdminPage = () => {
