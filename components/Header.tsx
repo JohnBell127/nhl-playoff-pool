@@ -34,9 +34,6 @@ const Header: React.FC = () => {
             <NavLink href="/teams" active={isActive('/teams')}>
               Teams
             </NavLink>
-            <NavLink href="/admin" active={isActive('/admin')}>
-              Admin
-            </NavLink>
           </nav>
         </div>
       </div>
