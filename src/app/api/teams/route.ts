@@ -13,46 +13,42 @@ const getTeamDataFilePath = () => {
   return path.join(process.cwd(), 'data', 'teamData.json');
 };
 
-// Initialize team data file in Vercel /tmp if it doesn't exist
+// Initialize team data file in Vercel environment if it doesn't exist
 const initTeamDataFile = () => {
   const filePath = getTeamDataFilePath();
-  
-  // Check if file exists
-  if (!fs.existsSync(filePath)) {
-    console.log(`Data file not found at ${filePath}. Initializing...`);
-    let initialData;
-    const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
+  const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
 
-    // Try to read from local data file if it exists (mainly for dev)
-    if (!process.env.VERCEL && fs.existsSync(localFilePath)) {
-        try {
-            console.log(`Attempting to initialize from local file: ${localFilePath}`);
-            initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
-        } catch (err) {
-            console.warn(`Local teamData.json found but unreadable (${localFilePath}). Using defaults.`, err);
-        }
-    }
-    
-    // If initialData is still undefined (Vercel env or local file issue), use defaults
-    if (!initialData) {
-      console.log(`Initializing data using nhlPlayoffTeamsBase defaults.`);
-      initialData = {
-        teams: nhlPlayoffTeamsBase.map(team => ({
-          id: team.id,
-          wins: team.wins,
-        })),
-      };
-    }
-    
+  // Check if running in Vercel and file doesn't exist in /tmp
+  if (process.env.VERCEL && !fs.existsSync(filePath)) {
     try {
-      // Write the initial data to the target location (/tmp on Vercel, data/ locally)
-      console.log(`Writing initial data to: ${filePath}`);
+      // Check if local data file exists to copy from
+      if (fs.existsSync(localFilePath)) {
+        console.log(`Initializing Vercel /tmp data file from: ${localFilePath}`);
+        fs.copyFileSync(localFilePath, filePath); // Copy from local data to /tmp
+        console.log(`Successfully initialized data file at: ${filePath}`);
+      } else {
+        // If local file doesn't exist, initialize with defaults
+        console.warn(`Local data file (${localFilePath}) not found. Initializing /tmp/teamData.json with defaults.`);
+        const initialData = {
+          teams: nhlPlayoffTeamsBase.map(team => ({ id: team.id, wins: team.wins }))
+        };
+        fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
+      }
+    } catch (error) {
+      console.error(`Failed to initialize data file at ${filePath}:`, error);
+    }
+  } else if (!process.env.VERCEL && !fs.existsSync(filePath)) {
+    // Handle initialization for local dev if needed (e.g., create data dir/file)
+    // Ensure directory exists
+    try {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      console.log(`Initializing local data file ${filePath} using nhlPlayoffTeamsBase defaults.`);
+      const initialData = {
+        teams: nhlPlayoffTeamsBase.map(team => ({ id: team.id, wins: team.wins }))
+      };
       fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
-      console.log(`Successfully initialized data file at: ${filePath}`);
-    } catch (writeErr) {
-      console.error(`Failed to write initial data file to ${filePath}:`, writeErr);
-      // If writing fails, we might be in a truly read-only environment or /tmp is full
-      // We'll proceed, but reads might fail later if the file isn't there
+    } catch (error) {
+      console.error(`Failed to initialize local data file ${filePath}:`, error);
     }
   }
 };
@@ -64,7 +60,7 @@ export async function GET() {
     initTeamDataFile();
     
     const filePath = getTeamDataFilePath();
-    console.log(`GET /api/teams - Reading data from: ${filePath}`);
+    // console.log(`GET /api/teams - Reading data from: ${filePath}`); // Keep commented or remove
     
     // Read team data from JSON file
     const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -83,7 +79,9 @@ export async function GET() {
     return NextResponse.json({ teams });
   } catch (error) {
     console.error('Error fetching teams:', error);
-    // Attempt to return default data if file read fails
+    // Simpler fallback: just return base data
+    return NextResponse.json({ teams: nhlPlayoffTeamsBase });
+    /* // Removed more complex fallback logic
     console.warn('Failed to read team data file, attempting to return defaults.');
     try {
       return NextResponse.json({ teams: nhlPlayoffTeamsBase });
@@ -94,5 +92,6 @@ export async function GET() {
         { status: 500 }
       );
     }
+    */
   }
 } 

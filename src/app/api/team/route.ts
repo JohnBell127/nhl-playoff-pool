@@ -21,44 +21,42 @@ const getTeamDataFilePath = () => {
   return path.join(process.cwd(), 'data', 'teamData.json');
 };
 
-// Initialize team data file in Vercel /tmp if it doesn't exist
+// Initialize team data file in Vercel environment if it doesn't exist
 const initTeamDataFile = () => {
   const filePath = getTeamDataFilePath();
-  
-  // Check if file exists
-  if (!fs.existsSync(filePath)) {
-    console.log(`Data file not found at ${filePath}. Initializing...`);
-    let initialData;
-    const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
+  const localFilePath = path.join(process.cwd(), 'data', 'teamData.json');
 
-    // Try to read from local data file if it exists (mainly for dev)
-    if (!process.env.VERCEL && fs.existsSync(localFilePath)) {
-        try {
-            console.log(`Attempting to initialize from local file: ${localFilePath}`);
-            initialData = JSON.parse(fs.readFileSync(localFilePath, 'utf8'));
-        } catch (err) {
-            console.warn(`Local teamData.json found but unreadable (${localFilePath}). Using defaults.`, err);
-        }
-    }
-    
-    // If initialData is still undefined (Vercel env or local file issue), use defaults
-    if (!initialData) {
-      console.log(`Initializing data using nhlPlayoffTeamsBase defaults.`);
-      initialData = {
-        teams: nhlPlayoffTeamsBase.map(team => ({
-          id: team.id,
-          wins: team.wins
-        }))
-      };
-    }
-    
+  // Check if running in Vercel and file doesn't exist in /tmp
+  if (process.env.VERCEL && !fs.existsSync(filePath)) {
     try {
-      // Write the initial data to the target location (/tmp on Vercel, data/ locally)
-      console.log(`Writing initial data to: ${filePath}`);
+      // Check if local data file exists to copy from
+      if (fs.existsSync(localFilePath)) {
+        console.log(`Initializing Vercel /tmp data file from: ${localFilePath}`);
+        fs.copyFileSync(localFilePath, filePath); // Copy from local data to /tmp
+        console.log(`Successfully initialized data file at: ${filePath}`);
+      } else {
+        // If local file doesn't exist, initialize with defaults
+        console.warn(`Local data file (${localFilePath}) not found. Initializing /tmp/teamData.json with defaults.`);
+        const initialData = {
+          teams: nhlPlayoffTeamsBase.map(team => ({ id: team.id, wins: team.wins }))
+        };
+        fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
+      }
+    } catch (error) {
+      console.error(`Failed to initialize data file at ${filePath}:`, error);
+    }
+  } else if (!process.env.VERCEL && !fs.existsSync(filePath)) {
+    // Handle initialization for local dev if needed (e.g., create data dir/file)
+    // Ensure directory exists
+    try {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      console.log(`Initializing local data file ${filePath} using nhlPlayoffTeamsBase defaults.`);
+      const initialData = {
+        teams: nhlPlayoffTeamsBase.map(team => ({ id: team.id, wins: team.wins }))
+      };
       fs.writeFileSync(filePath, JSON.stringify(initialData, null, 2), 'utf8');
-      console.log(`Successfully initialized data file at: ${filePath}`);
-    } catch (writeErr) {
-      console.error(`Failed to write initial data file to ${filePath}:`, writeErr);
+    } catch (error) {
+      console.error(`Failed to initialize local data file ${filePath}:`, error);
     }
   }
 };
@@ -68,7 +66,7 @@ const updateTeamWinsInFile = (id: number, wins: number) => {
   try {
     initTeamDataFile(); // Ensure file exists before trying to update
     const filePath = getTeamDataFilePath();
-    console.log(`PUT /api/team - Updating team ${id} with ${wins} wins in file: ${filePath}`);
+    // console.log(`PUT /api/team - Updating team ${id} with ${wins} wins in file: ${filePath}`); // Keep commented or remove
     
     // Read current data
     const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -86,7 +84,7 @@ const updateTeamWinsInFile = (id: number, wins: number) => {
     
     // Write back to file
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    console.log(`Successfully updated team ${id} in ${filePath}`);
+    // console.log(`Successfully updated team ${id} in ${filePath}`); // Keep commented or remove
     
     // Get the full team details to return
     const baseTeam = getTeamById(nhlPlayoffTeamsBase, id);
@@ -122,9 +120,9 @@ export async function PUT(request: Request) {
     revalidatePath('/admin');
     revalidatePath('/admin/standings');
     revalidatePath('/');
-    revalidatePath('/teams'); // Add revalidation for teams page
+    // revalidatePath('/teams'); // Removed revalidation for teams page
     
-    console.log(`PUT /api/team - Successfully updated team ${teamId}, revalidating paths.`);
+    // console.log(`PUT /api/team - Successfully updated team ${teamId}, revalidating paths.`); // Keep commented or remove
     return NextResponse.json({ success: true, team: updatedTeam });
   } catch (error) {
     console.error('Error updating team wins (PUT request handler): ', error);
